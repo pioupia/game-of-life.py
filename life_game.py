@@ -46,6 +46,15 @@ class GameOfLife:
         """
         self.root.mainloop()
 
+    def copy_array(self, arr) -> list:
+        new_arr = []
+        for i in range(len(arr)):
+            if isinstance(arr[i], list):
+                new_arr.append(self.copy_array(arr[i]))
+            else:
+                new_arr.append(arr[i])
+        return new_arr
+
     def run(self) -> bool:
         """
         Méthode principale du jeu.
@@ -59,17 +68,21 @@ class GameOfLife:
 
         self.canvas.delete("all")
 
+        new_cells = self.copy_array(self.cells)
+
         for y in range(0, len(self.cells)):
             for x in range(0, len(self.cells[y])):
                 status = self.cells[y][x]
                 neighbors = self.getNeighborsCount(x, y)
 
                 if status == 0 and neighbors == 3:
-                    self.cells[y][x] = 1
+                    new_cells[y][x] = 1
                 elif status == 1 and neighbors not in [2, 3]:
-                    self.cells[y][x] = 0
+                    new_cells[y][x] = 0
+                else:
+                    new_cells[y][x] = status
 
-                color = self.colors['bg'] if self.cells[y][x] == 0 \
+                color = self.colors['bg'] if new_cells[y][x] == 0 \
                     else self.colors['cell']
                 self.canvas.create_rectangle(
                     (x * self.size) - (self.size // 2),
@@ -79,6 +92,7 @@ class GameOfLife:
                     fill=color,
                     outline=color)
 
+        self.cells = new_cells
         self.root.update()
         return self.run()
 
