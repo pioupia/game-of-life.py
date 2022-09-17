@@ -102,7 +102,7 @@ class GameOfLife:
             if self.playing:
                 self.run()
 
-    def click(self, event) -> bool:
+    def click(self, event, trusted=True) -> bool:
         if self.playing:
             return False
 
@@ -111,13 +111,19 @@ class GameOfLife:
         if case is None:
             return False
 
-        self.cells[y][x] = 1 if self.cells[y][x] == 0 else 0
+        if trusted:
+            self.cells[y][x] = 1 if self.cells[y][x] == 0 else 0
+        else:
+            self.cells[y][x] = 1
+
+        color = self.colors['bg'] if self.cells[y][x] == 0 \
+            else self.colors['cell']
 
         self.canvas.create_rectangle((x * self.size) - (self.size // 2),
                                      (y * self.size) - (self.size // 2),
                                      (x * self.size) + (self.size // 2),
                                      (y * self.size) + (self.size // 2),
-                                     fill=self.colors['cell'],
+                                     fill=color,
                                      outline=self.colors['bg'])
 
         return True
@@ -126,7 +132,7 @@ class GameOfLife:
         if self.playing:
             return False
 
-        return self.click(event)
+        return self.click(event, trusted=False)
 
     def getNeighborsCount(self, x=0, y=0) -> int:
         size = 0
