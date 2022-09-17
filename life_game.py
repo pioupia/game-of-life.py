@@ -77,7 +77,7 @@ class GameOfLife:
                     (x * self.size) + (self.size // 2),
                     (y * self.size) + (self.size // 2),
                     fill=color,
-                    outline=self.colors['cell'])
+                    outline=self.colors['bg'])
 
         self.root.update()
         return self.run()
