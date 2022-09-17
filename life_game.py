@@ -111,7 +111,7 @@ class GameOfLife:
         if case is None:
             return False
 
-        self.cells[y][x] = 1
+        self.cells[y][x] = 1 if self.cells[y][x] == 0 else 0
 
         self.canvas.create_rectangle((x * self.size) - (self.size // 2),
                                      (y * self.size) - (self.size // 2),
